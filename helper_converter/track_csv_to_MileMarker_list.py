@@ -8,10 +8,10 @@ import pandas as pd
 from pyproj import Geod
 
 # ==========================
-# Einstellungen
+# Settings
 # ==========================
-input_csv = "/Users/falcon/TEMP_PY/AZT_trackpoints.csv"
-output_csv = "output_MM_points.csv"
+input_csv = "../data/track_coordinates_list.csv"
+output_csv = "../data/MM_points_list.csv"
 interval_miles = 10
 
 interval_meters = interval_miles * 1609.344

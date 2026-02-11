@@ -1,8 +1,21 @@
-#convert gpx to panda
+#convert gpx to csv
+# ==========================
+# Settings
+# ==========================
+
+# set next line to 'False' after making desired changes in row 44
+explore_gpx_file_for_multiple_tracks = False
+input_file_name = '../data/Arizona Trail_w_o_POI .gpx'
+output_file_name ='../data/track_coordinates_list.csv'
+
+
 
 
 import gpxpy
 import pandas as pd
+
+
+
 
 colors = [
     "#FF0000",  # rot
@@ -14,32 +27,37 @@ colors = [
 ]
 
 # Load and parse the GPX file
-gpx_file = open('data/Arizona Trail_w_o_POI .gpx', 'r')
+gpx_file = open(input_file_name, 'r')
 gpx = gpxpy.parse(gpx_file)
 
 data = []
 i = 0
-# Iterate through all tracks
-for track in gpx.tracks:
-    #print(track.name)
-    
-    if track.name.startswith('AZT'):
-        i = i + 1
-        #print(track.name)
-        # Iterate through all segments within a track
-        for segment in track.segments:
-            for point in segment.points:
-                data.append({
-                    'track_name': track.name,  # Helpful to identify which track
-                    #'time': point.time,
-                    'latitude': point.latitude,
-                    'longitude': point.longitude,
-                    'color' : colors[i % len(colors)]
-                    #'elevation': point.elevation
-                })
 
-# Create DataFrame
-df = pd.DataFrame(data)
+if explore_gpx_file_for_multiple_tracks == True:
+    for track in gpx.tracks:
+        print(track.name)
+   
+else:
+     # Iterate through all tracks
+    for track in gpx.tracks:
+        # depending on tracks in your file, make changes to next line. 
+        # we only want desired tracks from file
+        if track.name.startswith('AZT'):
+            i = i + 1
+            # Iterate through all segments within a track
+            for segment in track.segments:
+                for point in segment.points:
+                    data.append({
+                        'track_name': track.name,  # Helpful to identify which track
+                        #'time': point.time,
+                        'latitude': point.latitude,
+                        'longitude': point.longitude,
+                        'color' : colors[i % len(colors)]
+                        #'elevation': point.elevation
+                    })
 
-df.to_csv('your_file_name.csv', index=False)
-#print (df.to_csv())
+    # Create DataFrame
+    df = pd.DataFrame(data)
+
+    df.to_csv(output_file_name, index=False)
+     

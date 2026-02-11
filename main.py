@@ -126,7 +126,7 @@ for i, loc in enumerate(locations):
     ).add_to(m)
 
 # # create route sections
-route_df = pd.read_csv('data/AZT_trackpoints.csv')
+route_df = pd.read_csv('./data/track_coordinates_list.csv')
 
 ### one Polyline
 route_df.head()
