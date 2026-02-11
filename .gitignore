@@ -1,2 +1,3 @@
 .DS_Store
 .cache.sqlite
+data/__pycache__/weatherData_decoded.cpython-314.pyc
