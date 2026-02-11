@@ -5,8 +5,8 @@
 
 # set next line to 'False' after making desired changes in row 44
 explore_gpx_file_for_multiple_tracks = False
-input_file_name = '../data/Arizona Trail_w_o_POI .gpx'
-output_file_name ='../data/track_coordinates_list.csv'
+input_file_name = '../data/PCT.gpx'
+output_file_name ='../data/track_coordinates_list'
 
 
 
@@ -42,7 +42,7 @@ else:
     for track in gpx.tracks:
         # depending on tracks in your file, make changes to next line. 
         # we only want desired tracks from file
-        if track.name.startswith('AZT'):
+        if track.name.startswith('CA') or track.name.startswith('OR') or track.name.startswith('WA') :
             i = i + 1
             # Iterate through all segments within a track
             for segment in track.segments:
@@ -59,5 +59,7 @@ else:
     # Create DataFrame
     df = pd.DataFrame(data)
 
-    df.to_csv(output_file_name, index=False)
+    df.to_csv(output_file_name + '_NOBO' + '.csv', index=False)
      
+    # df_reversed = df[::-1]
+    # df_reversed.to_csv(output_file_name + '_SOBO' + '.csv', index=False)

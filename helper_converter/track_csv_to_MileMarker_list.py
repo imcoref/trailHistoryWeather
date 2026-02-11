@@ -10,7 +10,7 @@ from pyproj import Geod
 # ==========================
 # Settings
 # ==========================
-input_csv = "../data/track_coordinates_list.csv"
+input_csv = "../data/track_coordinates_list_NOBO.csv"
 output_csv = "../data/MM_points_list.csv"
 interval_miles = 10
 
@@ -49,7 +49,7 @@ for i in range(1, len(df)):
         lon_new, lat_new, _ = geod.fwd(lon1, lat1, az12, remaining)
 
         result.append({
-            "mile_marker": next_target / 1609.344,
+            "mile_marker": round(next_target / 1609.344),
             "latitude": lat_new,
             "longitude": lon_new
         })
