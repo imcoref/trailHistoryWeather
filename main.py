@@ -81,7 +81,7 @@ if "clicked_weather_df" not in st.session_state:
 # Map-Layout: Settings
 # -------------------------------------------------
 st.set_page_config(page_title= trail_name +" History Weather", page_icon="desert" ,layout="wide")
-st.title("🏔 " + trail_name +"  History Weather")
+#st.title("🏔 " + trail_name +"  History Weather")
 st.logo(("data/AZT_emblem.png"))
 
 # -------------------------------------------------
@@ -180,6 +180,7 @@ selected_points = MM_df[
     (MM_df["mile_marker"] >= start_mm) &
     (MM_df["mile_marker"] <= end_mm)
 ]
+
 
 
 
@@ -296,6 +297,9 @@ if st.session_state.mm_weather_df is not None:
             "Rain (mm)", "Snow (cm)", "WorstWX"
         ]].reset_index(drop=True), width="stretch")
         
+
+st.sidebar.caption("Proudly presented by Shepherd")
+
 ## -------------------------------------------------
 # Create Map 
 # -------------------------------------------------
@@ -360,6 +364,7 @@ if st.session_state.clicked_location:
     ).add_to(m)
 # show map finally
 #st_data = st_folium(m, width=800, height=500)
+
 st_data = st_folium(m, use_container_width=True, height=500)
 
 
