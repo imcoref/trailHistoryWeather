@@ -365,7 +365,7 @@ if st.session_state.clicked_location:
 # show map finally
 #st_data = st_folium(m, width=800, height=500)
 
-st_data = st_folium(m, use_container_width=True, height=500)
+st_data = st_folium(m, use_container_width=True, height=600)
 
 
 if st_data and st_data.get("last_clicked"):
