@@ -1,3 +1,6 @@
 data/__pycache__/weatherData_decoded.cpython-313.pyc
 .DS_Store
 .cache.sqlite
+.venv
+.vscode
+
