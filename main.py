@@ -1,5 +1,3 @@
-### get data from external file
-
 import streamlit as st
 import openmeteo_requests
 import requests_cache
@@ -82,16 +80,17 @@ if "clicked_weather_df" not in st.session_state:
 # -------------------------------------------------
 st.set_page_config(page_title= trail_name +" History Weather", page_icon="desert" ,layout="wide")
 #st.title("🏔 " + trail_name +"  History Weather")
-st.logo(("data/AZT_emblem.png"))
+#st.logo(("data/AZT_emblem.png"))
 
 # -------------------------------------------------
-# Sidebar: Settings
+# Sidebar: Beautyfier
 # -------------------------------------------------
-st.sidebar.header("🏔 " + trail_name +"  History Weather")
 
-#st.sidebar.image("data/AZT_emblem.png")
-
-
+with st.sidebar.container(border=False):
+    left, center, right = st.columns([1, 2, 1])  # 25% / 50% / 25%
+    with center:
+        st.image("data/AZT_emblem.png")
+st.sidebar.header("History Weather")
 
 # -----------------------------------
 # Sidebar: Settings Start/End Date Input
@@ -101,20 +100,21 @@ st.sidebar.header("🏔 " + trail_name +"  History Weather")
 start_date = st.sidebar.date_input(
     "Start Date",
     key="start_date",
-    max_value=date.today() - timedelta(days=1)
+    max_value=date.today()
 
 )
 # End-Date Logic
 if start_date != st.session_state.last_start_date:
 
-    st.session_state.end_date = start_date + timedelta(days=1)
+    st.session_state.end_date = start_date 
     st.session_state.last_start_date = start_date
 
 
 # End Date Input
 end_date = st.sidebar.date_input(
     "End Date",
-    key="end_date"
+    key="end_date",
+    max_value=date.today() 
 )
 
 # Hardcoded Dates for Test
@@ -151,7 +151,7 @@ st.sidebar.subheader("Mile Marker Range")
 mm_options = MM_df["mile_marker"].tolist()
 
 
-# Reset Mile Marker if flag is set ( Start= 0, Stop= LasT)
+# Reset Mile Marker if flag is set ( Start= 0, Stop= Last)
 if st.session_state.get("reset_mm_range", False):
 
     st.session_state.start_mm = mm_options[0]
@@ -226,7 +226,7 @@ if st.sidebar.button("Load Weather for MM Range"):
             f"Temp Max ({temp_symbol})": daily.Variables(1).ValuesAsNumpy(),
             f"Temp Min ({temp_symbol})": daily.Variables(2).ValuesAsNumpy(),
             "Rain (mm)": daily.Variables(3).ValuesAsNumpy(),
-            "WorstWX": daily_weather_human,
+            "Worst weather": daily_weather_human,
             "Snow (cm)": daily.Variables(4).ValuesAsNumpy(),
         })
 
@@ -277,26 +277,7 @@ if st.session_state.mm_range_coords is not None:
         st.session_state.reset_mm_range = True
 
         st.rerun()
-# -------------------------
-# Format of WX data, 1 table/day
-# -------------------------
-if st.session_state.mm_weather_df is not None:
 
-    df = st.session_state.mm_weather_df
-
-    unique_dates = df["Date"].unique()
-
-    for date in unique_dates:
-        st.subheader(f"📅 Weather for {date}")
-        daily_df = df[df["Date"] == date].copy()
-
-        st.dataframe(daily_df[[
-            "Mile Marker",
-            f"Temp Max ({temp_symbol})",
-            f"Temp Min ({temp_symbol})",
-            "Rain (mm)", "Snow (cm)", "WorstWX"
-        ]].reset_index(drop=True), width="stretch")
-        
 
 st.sidebar.caption("Proudly presented by Shepherd")
 
@@ -311,7 +292,7 @@ route_df = pd.read_csv(Trackpoints_file)
 mean_lat = POI_df["latitude"].mean()
 mean_lon = POI_df["longitude"].mean()
 
-# Wenn Range aktiv → keine feste Center-Location
+# if Range is active → NO fixed Center-Location
 if st.session_state.mm_range_coords:
     m = folium.Map(zoom_start=9)
 else:
@@ -362,11 +343,31 @@ if st.session_state.clicked_location:
         icon=folium.Icon(color='blue',icon="cloud", prefix='fa'),
         
     ).add_to(m)
-# show map finally
-#st_data = st_folium(m, width=800, height=500)
 
+# -----------------   
+# show map finally
+# -----------------
 st_data = st_folium(m, use_container_width=True, height=600)
 
+# -------------------------
+# Format of WX data, 1 table/day
+# -------------------------
+if st.session_state.mm_weather_df is not None:
+
+    df = st.session_state.mm_weather_df
+
+    unique_dates = df["Date"].unique()
+
+    for date in unique_dates:
+        st.subheader(f"📅 Weather for {date}")
+        daily_df = df[df["Date"] == date].copy()
+
+        st.dataframe(daily_df[[
+            "Mile Marker",
+            f"Temp Max ({temp_symbol})",
+            f"Temp Min ({temp_symbol})",
+            "Rain (mm)", "Snow (cm)", "Worst weather"
+        ]].reset_index(drop=True), width="stretch")
 
 if st_data and st_data.get("last_clicked"):
 
@@ -376,12 +377,13 @@ if st_data and st_data.get("last_clicked"):
     new_click = (clicked_lat, clicked_lon)
     st.success(f"Selected Location: {clicked_lat:.5f}, {clicked_lon:.5f}")
 
-    # Nur wenn wirklich neuer Punkt
+    # if new point is present
     if new_click != st.session_state.clicked_location:
         st.session_state.clicked_location = new_click
         st.rerun()
 
-# Wetter für geklickte Position abrufen
+# -------------------------------------------------
+# load WX for clicked position
 # -------------------------------------------------
 if st.session_state.clicked_location:
 
@@ -391,9 +393,6 @@ if st.session_state.clicked_location:
     if st.button("Load weather for clicked location"):
 
         with st.spinner("Loading weather data..."):
-
-            #lat, lon = st.session_state.clicked_location
-
             response = fetch_weather(
                 [lat],
                 [lon],
@@ -417,7 +416,7 @@ if st.session_state.clicked_location:
             f"Temp Min ({temp_symbol})": daily.Variables(2).ValuesAsNumpy(),
             "Rain (mm)": daily.Variables(3).ValuesAsNumpy(),
             "Snow (cm)": daily.Variables(4).ValuesAsNumpy(),
-            "WorstWX": daily_weather_human
+            "Worst weather": daily_weather_human
         })
 
         df["Date"] = df["Date"].dt.strftime("%b-%d-%Y")
