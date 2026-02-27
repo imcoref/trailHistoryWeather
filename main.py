@@ -279,7 +279,7 @@ if st.session_state.mm_range_coords is not None:
         st.rerun()
 
 
-st.sidebar.caption("Proudly presented by Shepherd")
+st.sidebar.caption("Proudly presented by Shepherd 🇩🇪 🍺 🥨")
 
 ## -------------------------------------------------
 # Create Map 
