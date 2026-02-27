@@ -4,5 +4,5 @@ data/__pycache__/weatherData_decoded.cpython-314.pyc
 .venv
 *.pyc
 ./data/__pycache__/*
-
+.vscode
 data/__pycache__/weatherData_decoded.cpython-313.pyc
