@@ -11,7 +11,7 @@ from streamlit_folium import st_folium
 
 from data.weatherData_decoded import wmoData
 from datetime import timedelta, date as Date
-import sys
+#import sys
 
 
 
@@ -44,8 +44,8 @@ def main():
     # File Variables
     # -------------------------------------------------
 
-    trail_name = sys.argv[1]
-
+    #trail_name = sys.argv[1]
+    trail_name = st.secrets["TRAIL_NAME"]
     emblem_image = 'data/' + trail_name + '_emblem.png'
     if not os.path.isfile(emblem_image):
         emblem_image = False
