@@ -3,6 +3,7 @@ import openmeteo_requests
 import requests_cache
 import pandas as pd
 import numpy as np
+import os
 from retry_requests import retry
 import folium
 from streamlit_folium import st_folium
@@ -18,8 +19,15 @@ from datetime import timedelta, date
 trail_name = 'AZT'
 
 ## do not change next lines!
-POI_icon_image = 'data/' + trail_name + '_emblem.png'
-POI_file = './data/' + trail_name + '_POI.csv'
+emblem_image = 'data/' + trail_name + '_emblem.png'
+# if not os.path.isfile(emblem_image):
+#     emblem_image = False
+
+
+
+POI_file = './data/' + trail_name + '_POI.csv__'
+if not os.path.isfile(POI_file):
+    POI_file = False
 
 Trackpoints_file = './data/' + trail_name + '_trackpoints.csv'
 MM_file_NOBO = './data/' + trail_name + '_MM_points_list_NOBO.csv' 
@@ -89,7 +97,8 @@ st.set_page_config(page_title= trail_name +" History Weather", page_icon="desert
 with st.sidebar.container(border=False):
     left, center, right = st.columns([1, 2, 1])  # 25% / 50% / 25%
     with center:
-        st.image("data/AZT_emblem.png")
+        #if emblem_image:
+         st.image(emblem_image)
 st.sidebar.header("History Weather")
 
 # -----------------------------------
@@ -286,11 +295,11 @@ st.sidebar.caption("Proudly presented by Shepherd 🇩🇪 🍺 🥨")
 # -------------------------------------------------
 #st.subheader("🗺 " + trail_name + " Trail Map")
 
-POI_df = pd.read_csv(POI_file)
+
 route_df = pd.read_csv(Trackpoints_file)
 
-mean_lat = POI_df["latitude"].mean()
-mean_lon = POI_df["longitude"].mean()
+mean_lat = route_df["latitude"].mean()
+mean_lon = route_df["longitude"].mean()
 
 # if Range is active → NO fixed Center-Location
 if st.session_state.mm_range_coords:
@@ -321,21 +330,24 @@ if st.session_state.mm_range_coords:
     m.fit_bounds(st.session_state.mm_range_coords)
 
 # POI Marker
-for _, row in POI_df.iterrows():
-    folium.Marker(
-        location=[row["latitude"], row["longitude"]],
-        popup=folium.Popup(
-            f"<b>{row['name']}</b>",
-            max_width=300
-        ),
-        tooltip=row["name"],
-        icon=folium.CustomIcon(
-            POI_icon_image,
-            icon_size=(22, 22),
-            icon_anchor=(1, 22),
-            popup_anchor=(-3, -76),
-        )
-    ).add_to(m)
+
+if POI_file:
+    POI_df = pd.read_csv(POI_file)
+    for _, row in POI_df.iterrows():
+        folium.Marker(
+            location=[row["latitude"], row["longitude"]],
+            popup=folium.Popup(
+                f"<b>{row['name']}</b>",
+                max_width=300
+            ),
+            tooltip=row["name"],
+            icon=folium.CustomIcon(
+                emblem_image,
+                icon_size=(22, 22),
+                icon_anchor=(1, 22),
+                popup_anchor=(-3, -76),
+            )
+        ).add_to(m)
 
 if st.session_state.clicked_location:
     folium.Marker(

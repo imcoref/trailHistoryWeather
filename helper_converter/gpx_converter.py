@@ -43,11 +43,13 @@ def convert_gpx_to_csv(input_file_name, track_names, trailname):
      # Iterate through all tracks
     for track in gpx.tracks:
         
-        if track.name.startswith(tuple(track_names)): 
+        if track.name is None or  track.name.startswith(tuple(track_names)): 
             i = i + 1
             # Iterate through all segments within a track
             for segment in track.segments:
                 for point in segment.points:
+                    if track.name is None:
+                        track.name = trailname
                     data.append({
                         'track_name': track.name,  # Helpful to identify which track
                         #'time': point.time,
