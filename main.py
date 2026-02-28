@@ -25,7 +25,7 @@ emblem_image = 'data/' + trail_name + '_emblem.png'
 
 
 
-POI_file = './data/' + trail_name + '_POI.csv__'
+POI_file = './data/' + trail_name + '_POI.csv'
 if not os.path.isfile(POI_file):
     POI_file = False
 
@@ -131,20 +131,21 @@ end_date = st.sidebar.date_input(
 # end_date = "2025-05-04"
 
 # -----------------------------------
-# Sidebar: Settings Temperature °C or F
+# Sidebar: Settings Temperature °C or F / Direction NOBO or SOBO
 # -----------------------------------
-temperature_unit_input = st.sidebar.selectbox(
-    "Temperature Unit",
-    ["Celsius", "Fahrenheit"]
-)
-temperature_unit = "celsius" if temperature_unit_input == "Celsius" else "fahrenheit"
-temp_symbol = "°C" if temperature_unit == "celsius" else "°F"
 
-# -----------------------------------
-# Sidebar: Settings Direction NOBO or SOBO
-# -----------------------------------
-direction = st.sidebar.radio("Direction", ["NOBO", "SOBO"])
-nobo = True if direction == "NOBO" else False
+with st.sidebar.container(border=False):
+    left, right = st.columns([1, 1])  # 50% / 50% 
+    with right:
+        direction = st.radio("Direction", ["NOBO", "SOBO"])
+        nobo = True if direction == "NOBO" else False
+
+    with left:
+        temperature_unit_input = st.radio("Temperature Unit", ["Celsius", "Fahrenheit"])
+        temperature_unit = "celsius" if temperature_unit_input == "Celsius" else "fahrenheit"
+        temp_symbol = "°C" if temperature_unit == "celsius" else "°F"
+
+
 
 
 # -----------------------------------
