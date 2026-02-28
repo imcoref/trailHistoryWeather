@@ -45,7 +45,8 @@ def main():
     # -------------------------------------------------
 
     #trail_name = sys.argv[1]
-    trail_name = st.secrets["TRAIL_NAME"]
+    #trail_name = st.secrets["TRAIL_NAME"]
+    trail_name = 'AZT'
     emblem_image = 'data/' + trail_name + '_emblem.png'
     if not os.path.isfile(emblem_image):
         emblem_image = False
